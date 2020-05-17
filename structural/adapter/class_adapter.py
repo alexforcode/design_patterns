@@ -10,10 +10,10 @@ from abc import ABCMeta, abstractmethod
 class Forrest(object):
     """ Класс стороннего сервиса """
     def __init__(self):
-        self.name = 'Forrest'
+        self._name = 'Forrest'
 
     def walk(self, speed):
-        print(f'{self.name}: {speed} km/h')
+        print(f'{self._name}: {speed} km/h')
 
 
 class IClient(metaclass=ABCMeta):
@@ -26,7 +26,7 @@ class IClient(metaclass=ABCMeta):
 class RunForrest(Forrest, IClient):
     """ Адаптер для взаимодействия класса сервиса с клиентом """
     def run(self, speed):
-        print(f'Run, {self.name}, run!')
+        print(f'Run, {self._name}, run!')
         self.walk(speed)
 
 
