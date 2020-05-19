@@ -29,6 +29,10 @@ class ICommand(metaclass=ABCMeta):
     def execute(self):
         pass
 
+    @abstractmethod
+    def undo(self):
+        pass
+
 
 class LightOnCommand(ICommand):
     """ Конкретная команда """
@@ -38,6 +42,9 @@ class LightOnCommand(ICommand):
     def execute(self):
         self.receiver.on()
 
+    def undo(self):
+        self.receiver.off()
+
 
 class LightOffCommand(ICommand):
     """ Конкретная команда """
@@ -46,6 +53,9 @@ class LightOffCommand(ICommand):
 
     def execute(self):
         self.receiver.off()
+
+    def undo(self):
+        self.receiver.on()
 
 
 class Light(object):
@@ -64,12 +74,17 @@ class RemoteControl(object):
     """ Отправитель команд """
     def __init__(self):
         self.command = None
+        self.undo_command = None
 
     def set_command(self, command):
         self.command = command
 
     def press_button(self):
         self.command.execute()
+        self.undo_command = self.command
+
+    def undo(self):
+        self.undo_command.undo()
 
 
 if __name__ == '__main__':
@@ -78,6 +93,8 @@ if __name__ == '__main__':
 
     remote.set_command(LightOnCommand(light))
     remote.press_button()
+    remote.undo()
 
     remote.set_command(LightOffCommand(light))
     remote.press_button()
+    remote.undo()
